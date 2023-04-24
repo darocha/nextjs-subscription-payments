@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&display=swap');
 
 *,
 *:before,
@@ -21,11 +22,54 @@ html {
 
 html,
 body {
-  font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Helvetica Neue',
-    'Helvetica', sans-serif;
+  font-family: 'Source Sans Pro', sans-serif, -apple-system, system-ui,
+    BlinkMacSystemFont, 'Helvetica Neue', 'Helvetica', sans-serif;
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
   @apply text-white bg-zinc-800 antialiased;
+}
+
+html.dashboard,
+html.dashboard body,
+html.dashboard #__next,
+html.dashboard #root,
+html.dashboard main,
+html.dashboard .app,
+html.dashboard .content {
+  height: 100%;
+  width: 100%;
+}
+
+main,
+.app {
+  display: flex;
+  position: relative;
+  flex-direction: column;
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.dashboard-main {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.dashboard-content .align-items-center {
+  align-items: center;
+}
+.dashboard-form {
+  background: #2e3c59;
+  border-radius: 15px;
+  padding: 50px;
+  max-width: 640px;
+  align-self: center;
 }
 
 body {
@@ -36,6 +80,10 @@ body {
 
 a {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.logo {
+  @apply cursor-pointer rounded-full transform duration-100 ease-in-out mr-2 inline-flex;
 }
 
 .animated {
@@ -49,4 +97,23 @@ a {
 
 .height-screen-helper {
   height: calc(100vh - 80px);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #e0e0e0;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
