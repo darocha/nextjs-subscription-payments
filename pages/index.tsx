@@ -3,7 +3,7 @@ import { GetStaticPropsResult } from 'next';
 
 import Pricing from '@/components/Pricing';
 import { getActiveProductsWithPrices } from '@/utils/supabase-client';
-import { Product } from 'types';
+import { Product } from '@/types/types';
 import DefaultLayout from '@/components/Layout';
 
 interface Props {

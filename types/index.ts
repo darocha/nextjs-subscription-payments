@@ -1,0 +1,45 @@
+export type AddressType = {
+  city?: string | null;
+  companyName?: string | null;
+  country?: string | null;
+  county?: string | null;
+  createdAt?: string | null;
+  email?: string | null;
+  firstName?: string | null;
+  id?: number;
+  isBilling?: boolean | null;
+  isDefault?: boolean;
+  lastName?: string | null;
+  line1?: string | null;
+  line2?: string | null;
+  middleName?: string | null;
+  notes?: string | null;
+  state?: string | null;
+  type?: string | null;
+  updatedAt?: string | null;
+  userId?: string | null;
+  zipCode?: string | null;
+};
+
+export type AddressEntity = {
+  city: string | null;
+  company_name: string | null;
+  country: string | null;
+  county: string | null;
+  created_at: string | null;
+  email: string | null;
+  first_name: string | null;
+  id: number;
+  is_billing: boolean | null;
+  is_default: boolean | null;
+  last_name: string | null;
+  line1: string | null;
+  line2: string | null;
+  middle_name: string | null;
+  notes: string | null;
+  state: string | null;
+  type: string | null;
+  updated_at: string | null;
+  user_id: string | null;
+  zip_code: string | null;
+};

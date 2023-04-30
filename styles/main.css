@@ -9,9 +9,9 @@
   box-sizing: inherit;
 }
 
-*:focus {
-  @apply outline-none ring-2 ring-pink-500 ring-opacity-50;
-}
+/* *:focus {
+  @apply outline-1 ring-0   shadow-none rounded-md;
+} */
 
 html {
   height: 100%;
@@ -26,7 +26,7 @@ body {
     BlinkMacSystemFont, 'Helvetica Neue', 'Helvetica', sans-serif;
   text-rendering: optimizeLegibility;
   -moz-osx-font-smoothing: grayscale;
-  @apply text-white bg-zinc-800 antialiased;
+  /* @apply text-white bg-zinc-800 antialiased; */
 }
 
 html.dashboard,
@@ -65,11 +65,90 @@ main,
   align-items: center;
 }
 .dashboard-form {
-  background: #2e3c59;
+  /* background: #1f2a40; */
   border-radius: 15px;
-  padding: 50px;
+  padding: 0px;
   max-width: 640px;
   align-self: center;
+}
+
+.dashboard-form form {
+  padding: 50px;
+}
+
+.dashboard-form-header {
+  padding: 50px 50px 0;
+  border-radius: 15px 15px 0px 0px;
+}
+
+.dashboard-box {
+  /* background: #1f2a40; */
+  border-radius: 15px;
+  padding: 0;
+  align-self: center;
+  display: flex;
+  flex-direction: column !important;
+  margin-top: 5rem;
+  width: 100%;
+  max-width: 640px;
+  position: relative;
+}
+
+.dashboard-box-header {
+  padding: 50px 50px 0;
+  border-radius: 15px 15px 0px 0px;
+}
+
+.dashboard-circle-button {
+  padding: 20px;
+  width: 20px;
+  max-width: 20px;
+  height: 20px;
+  top: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+}
+
+.dashboard-speeddial .MuiSpeedDial-fab,
+.dashboard-speeddial .MuiSpeedDial-fab:hover {
+  background: transparent;
+  box-shadow: none;
+}
+.dashboard-speeddial .MuiSpeedDialAction-fab {
+  background: #333;
+  color: #eee;
+}
+.dashboard-speeddial .MuiSpeedDialAction-fab:hover {
+  background: #fff;
+  color: #333;
+}
+
+.dashboard-circle-button .bg-color-none {
+  background: transparent;
+}
+
+.dashboard-circle-button.absolute {
+  position: absolute;
+}
+
+.dashboard-box-body {
+  padding: 50px;
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.dashboard-list-item {
+  display: flex;
+  position: relative;
+  align-items: center;
+  border-radius: 5px;
+  padding: 20px;
+  justify-content: space-between;
 }
 
 body {

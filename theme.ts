@@ -6,6 +6,40 @@ import { createTheme } from '@mui/material/styles';
 export const tokens = (mode) => ({
   ...(mode === 'dark'
     ? {
+        dashboard: {
+          window: { background: '#1f2a40', color: '#fff' },
+          listItem: { background: '#2e3c59' },
+          textField: {
+            background: { main: '#2b2b2b', darker: '#1a1a1a' },
+            color: '#fff',
+            focus: {
+              background: 'red',
+              color: 'white'
+            },
+            label: {
+              color: '#fefefe',
+              error: { color: '#f44336' }
+            },
+            border: {
+              default: '#344465',
+              hover: '#344465',
+              error: {
+                default: '#f44336',
+                hover: '#f44336'
+              }
+            }
+          },
+          fab: {
+            background: 'transparent',
+            color: '#fff',
+            hover: { background: 'transparent', color: '#fff' },
+            fab: {
+              background: '#444',
+              color: '#fff',
+              hover: { background: '#777', color: '#fff' }
+            }
+          }
+        },
         grey: {
           100: '#e0e0e0',
           200: '#c2c2c2',
@@ -63,6 +97,43 @@ export const tokens = (mode) => ({
         }
       }
     : {
+        dashboard: {
+          window: { background: '#fff', color: '#111' },
+          listItem: {
+            background: '#fcfcfc'
+          },
+          textField: {
+            background: { main: '#fff', darker: '#fcfcfc' },
+            color: '#111',
+            //border: { main: '#e2e2e1', darker: '#d1d1d0' },
+            focus: {
+              background: 'red',
+              color: 'white'
+            },
+            label: {
+              color: '#222',
+              error: { color: '#f44336' }
+            },
+            border: {
+              default: '#344465',
+              hover: '#344465',
+              error: {
+                default: '#f44336',
+                hover: '#f44336'
+              }
+            }
+          },
+          fab: {
+            background: 'transparent',
+            color: '#111',
+            hover: { background: 'transparent', color: '#111' },
+            fab: {
+              background: '#444',
+              color: '#fff',
+              hover: { background: '#777', color: '#fff' }
+            }
+          }
+        },
         grey: {
           100: '#141414',
           200: '#292929',
@@ -189,6 +260,13 @@ export const themeSettings = (mode) => {
       h6: {
         fontFamily: ['Source Sans Pro', 'sans-serif'].join(','),
         fontSize: 14
+      }
+    },
+    components: {
+      MuiButtonBase: {
+        defaultProps: {
+          disableRipple: true // No more ripple, on the whole application!
+        }
       }
     }
   };

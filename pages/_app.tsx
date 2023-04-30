@@ -13,7 +13,15 @@ import { useRouter } from 'next/router';
 import 'styles/main.css';
 import 'styles/chrome-bug.css';
 
-export default function MyApp({ Component, pageProps }: AppProps) {
+export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+export default function MyApp({ Component, pageProps }: AppPropsWithLayout) {
   const [theme, colorMode] = useMode();
   const router = useRouter();
   //const isDashboard = router.asPath.startsWith('/dashboard');

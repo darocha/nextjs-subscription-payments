@@ -5,7 +5,7 @@ import { useRouter } from 'next/router';
 import Navbar from '@/components/ui/Navbar';
 import Footer from '@/components/ui/Footer';
 
-import { PageMeta } from '../types';
+import { PageMeta } from '../types/types';
 
 interface Props extends PropsWithChildren {
   meta?: PageMeta;

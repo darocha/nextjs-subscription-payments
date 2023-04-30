@@ -1,7 +1,7 @@
 import { PropsWithChildren } from 'react';
 import Head from 'next/head';
 import Navbar from '@/components/ui/Navbar';
-import { PageMeta } from '../types';
+import { PageMeta } from '../types/types';
 import Topbar from '../scenes/global/Topbar';
 import Sidebar from '@/scenes/global/Sidebar';
 

@@ -10,7 +10,6 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import SearchIcon from '@mui/icons-material/Search';
 import Logo from '@/components/icons/Logo';
-import s from './topbar.module.css';
 
 const Topbar = () => {
   const theme = useTheme();
@@ -24,11 +23,12 @@ const Topbar = () => {
       justifyContent="space-between"
       p={2}
     >
-      <Box width={'100%'} minWidth={'500px'}>
+      <Box width={'100%'} minWidth={'300px'} maxWidth={'300px'}>
         <Link href="/" className="logo" aria-label="Logo">
           <Logo />
         </Link>
       </Box>
+      <Box width={'100%'} minWidth={'200px'}></Box>
       <Box display="flex" width={'100%'} className="justify-center">
         {/* SEARCH BAR */}
         <Box
