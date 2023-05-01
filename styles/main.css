@@ -93,6 +93,16 @@ main,
   max-width: 640px;
   position: relative;
 }
+.dashboard-box.small {
+  max-width: 400px;
+}
+
+.dashboard-box.medium {
+  max-width: 1000px;
+}
+.dashboard-box.large {
+  max-width: 1920px;
+}
 
 .dashboard-box-header {
   padding: 50px 50px 0;

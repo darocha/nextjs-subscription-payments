@@ -1,3 +1,4 @@
+// @ts-ignore
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 
@@ -129,6 +130,8 @@ const manageSubscriptionStatusChange = async (
       id: subscription.id,
       user_id: uuid,
       metadata: subscription.metadata,
+      //TODO check valid status
+      // @ts-ignore
       status: subscription.status,
       price_id: subscription.items.data[0].price.id,
       //TODO check quantity on subscription

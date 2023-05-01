@@ -1,0 +1,27 @@
+export type MakerOrder = {
+  isOrderAsk: boolean; // ask: true bid: false
+  signer: string; // account address of the signer
+  collection: string; // address of the collection
+  price: string; // ask or bid price Bignumber
+  tokenId: string; // 0 for collection or id of item on the collection
+  amount: string; // quantity of items, only relevant for ERC-1155
+  strategy: string;
+  currency: string; // currency for the order (ETH or Cybercoin)
+  nonce: string; // reference to be able to cancel or change the transaction
+  startTime: string; // order is only valid after this day/time
+  endTime: string; // order is only valid until this day/time
+  minPercentageToAsk: string;
+  params: any;
+  v: string;
+  r: string;
+  s: string;
+};
+
+export type TakerOrder = {
+  isOrderAsk: boolean; // ask: true bid: false
+  taker: string; // account address of the signer
+  price: string; // ask or bid price Bignumber
+  tokenId: string; // 0 for collection or id of item on the collection
+  minPercentageToAsk: string;
+  params: any;
+};

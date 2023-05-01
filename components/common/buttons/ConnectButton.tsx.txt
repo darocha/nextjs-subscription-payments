@@ -1,0 +1,358 @@
+import React, { useEffect } from 'react';
+//import { useWeb3React, UnsupportedChainIdError } from '@web3-react/core';
+
+//new
+//import type { Web3ReactHooks } from '@web3-react/core'
+
+// import {
+//   NoEthereumProviderError,
+//   UserRejectedRequestError as UserRejectedRequestErrorInjected
+// } from '@web3-react/core';
+
+//import { UserRejectedRequestError as UserRejectedRequestErrorWalletConnect } from '@web3-react/walletconnect';
+// import { UserRejectedRequestError as UserRejectedRequestErrorFrame } from '@web3-react/frame';
+import { Web3Provider } from '@ethersproject/providers';
+import { formatEther } from '@ethersproject/units';
+import { useEagerConnect, useInactiveListener } from '@/hooks/useWeb3Custom';
+import {
+    injected,
+    network,
+    walletconnect,
+    walletlink,
+    ledger,
+    trezor,
+    lattice,
+    frame,
+    authereum,
+    fortmatic,
+    magic,
+    portis,
+    torus
+  } from '@/components/wallet/connectors';
+import { Spinner } from '@/components/spinner';
+
+import copyToClipboard from 'copy-to-clipboard';
+import { CopyToClipboardIcon } from '@/icons';
+
+  enum ConnectorNames {
+    Injected = 'Injected',
+    Network = 'Network',
+    WalletConnect = 'WalletConnect',
+    // WalletLink = 'WalletLink',
+    // Ledger = 'Ledger',
+    // Trezor = 'Trezor',
+    // Lattice = 'Lattice',
+    // Frame = 'Frame',
+    // Authereum = 'Authereum',
+    // Fortmatic = 'Fortmatic',
+    // Magic = 'Magic',
+    // Portis = 'Portis',
+    // Torus = 'Torus'
+  }
+
+  const connectorsByName: { [connectorName in ConnectorNames]: any } = {
+    [ConnectorNames.Injected]: injected,
+    [ConnectorNames.Network]: network,
+    [ConnectorNames.WalletConnect]: walletconnect,
+    // [ConnectorNames.WalletLink]: walletlink,
+    // [ConnectorNames.Ledger]: ledger,
+    // [ConnectorNames.Trezor]: trezor,
+    // [ConnectorNames.Lattice]: lattice,
+    // [ConnectorNames.Frame]: frame,
+    // [ConnectorNames.Authereum]: authereum,
+    // [ConnectorNames.Fortmatic]: fortmatic,
+    // [ConnectorNames.Magic]: magic,
+    // [ConnectorNames.Portis]: portis,
+    // [ConnectorNames.Torus]: torus
+  }
+
+  function getErrorMessage(error: Error) {
+    // if (error instanceof NoEthereumProviderError) {
+    //   return 'No Ethereum browser extension detected, install MetaMask on desktop or visit from a dApp browser on mobile.'
+    // } 
+    // // else if (error instanceof UnsupportedChainIdError) {
+    // //   return "You're connected to an unsupported network."
+    // // }
+    // else if (
+    //   error instanceof UserRejectedRequestErrorInjected ||
+    //  // error instanceof UserRejectedRequestErrorWalletConnect ||
+    //   error instanceof UserRejectedRequestErrorFrame
+    // ) {
+    //   return 'Please authorize this website to access your Ethereum account.'
+    // } else {
+    //   console.error(error)
+    //   return 'An unknown error occurred. Check the console for more details.'
+    // }
+    console.log(error);
+    return 'An unknown error occurred. Check the console for more details.'
+  }
+
+  function ChainId() {
+  //  const { chainId } = useWeb3React()
+  const chainId = ''
+  
+    return (
+      <>
+        <span>Chain Id</span>
+        <span role="img" aria-label="chain">
+          ⛓
+        </span>
+        <span>{chainId ?? ''}</span>
+      </>
+    )
+  }
+
+  
+function BlockNumber() {
+    //const { chainId, library } = useWeb3React()
+    const chainId = null;
+    const library =null;
+  
+    const [blockNumber, setBlockNumber] = React.useState<number>()
+    React.useEffect((): any => {
+      if (!!library) {
+        let stale = false
+  
+        library
+          .getBlockNumber()
+          .then((blockNumber: number) => {
+            if (!stale) {
+              setBlockNumber(blockNumber)
+            }
+          })
+          .catch(() => {
+            if (!stale) {
+              setBlockNumber(null)
+            }
+          })
+  
+        const updateBlockNumber = (blockNumber: number) => {
+          setBlockNumber(blockNumber)
+        }
+        library.on('block', updateBlockNumber)
+  
+        return () => {
+          stale = true
+          library.removeListener('block', updateBlockNumber)
+          setBlockNumber(undefined)
+        }
+      }
+    }, [library, chainId]) // ensures refresh if referential identity of library doesn't change across chainIds
+  
+    return (
+      <>
+        <span>Block Number</span>
+        <span role="img" aria-label="numbers">
+          🔢
+        </span>
+        <span>{blockNumber === null ? 'Error' : blockNumber ?? ''}</span>
+      </>
+    )
+  }
+
+  export function Account({ trim=6 }:{ trim?: number }) {
+    //const { account } = useWeb3React()
+    const account = null; 
+    return <>
+      {account && 
+        <span className='flex items-center select-none hover:opacity-70 active:opacity-100 cursor-pointer' onClick={() => copyToClipboard(account)}>
+          {account ? `${account.substring(0, trim)}${ trim > 0 ? '...' : '' }${account.substring(account.length - trim)}` : ''}
+          <CopyToClipboardIcon className="ml-2" />
+        </span>
+      }
+      </>
+  }
+
+  
+export function Balance() {
+    //const { account, library, chainId } = useWeb3React()
+    const account = null;
+    const library =null;
+    const chainId=''
+  
+    const [balance, setBalance] = React.useState()
+    React.useEffect((): any => {
+      if (!!account && !!library) {
+        let stale = false
+  
+        library
+          .getBalance(account)
+          .then((balance: any) => {
+            if (!stale) {
+              setBalance(balance)
+            }
+          })
+          .catch(() => {
+            if (!stale) {
+              setBalance(null)
+            }
+          })
+  
+        return () => {
+          stale = true
+          setBalance(undefined)
+        }
+      }
+    }, [account, library, chainId]) // ensures refresh if referential identity of library doesn't change across chainIds
+  
+    return (
+      <>
+        <span>{balance === null ? 'Failed' : balance ? `Ξ${formatEther(balance)}` : ''}</span>
+      </>
+    )
+  }
+
+  
+function Header() {
+    const { active, error } = useWeb3React()
+  
+    return (
+      <>
+        <h1 style={{ margin: '1rem', textAlign: 'right' }}>{active ? '🟢' : error ? '🔴' : '🟠'}</h1>
+        <h3
+          style={{
+            display: 'grid',
+            gridGap: '1rem',
+            gridTemplateColumns: '1fr min-content 1fr',
+            maxWidth: '20rem',
+            lineHeight: '2rem',
+            margin: 'auto'
+          }}
+        >
+          {/*
+          <ChainId />
+          <BlockNumber />
+          <Account />
+          <Balance />
+          */}
+        </h3>
+      </>
+    )
+  }
+
+
+export function ConnectionStatus() {
+  //const { active, error } = useWeb3React()
+  const active = false;
+  const error = null;
+  return <span>{active ? '🟢' : error ? '🔴' : '🟠'}</span>
+}
+    
+export default function ConnectButton(){
+
+  return <></>
+
+    // const { connector, library, chainId, account, activate, deactivate, active, error } = useWeb3React<Web3Provider>();
+
+    // // handle logic to recognize the connector currently being activated
+    // const [activatingConnector, setActivatingConnector] = React.useState<any>()
+    // React.useEffect(() => {
+    //     if (activatingConnector && activatingConnector === connector) {
+    //     setActivatingConnector(undefined)
+    //     }
+    // }, [activatingConnector, connector])
+
+    // // todo: add 'remember me' flag to login on refresh or when user returns to site
+    // // handle logic to eagerly connect to the injected ethereum provider, if it exists and has granted access already
+    // const triedEager = useEagerConnect()
+
+    // // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+    // useInactiveListener(!triedEager || !!activatingConnector)
+    
+    // console.log('web3connetor', connector)
+    // console.log('web3 account', account)
+
+    // const onError = (error) => {
+    //   console.log('error', error);
+    // }
+
+    // async function connect(currentConnector){
+    //     try {
+    //       console.log('connectorName', currentConnector)
+    //      // setActivatingConnector(currentConnector)
+    //       await activate(currentConnector)
+    //     }
+    //     catch(ex) {
+    //       console.log('exception', ex)  
+    //     }
+    // }
+
+
+    // return (
+    //     <>
+    //         {active ?
+    //                 <button onClick={deactivate} 
+    //                     className={`p-5 py-2 my-1 mx-1 text-md font-semibold tracking-wide text-white rounded-md bg-green-600 hover:bg-green-500`}>
+    //                       Disconnect
+    //                 </button>
+    //           :
+    //                 <>
+    //                 <button onClick={()=>connect(connectorsByName["Injected"])} 
+    //                     className={`p-5 py-2 my-1 mx-1 text-md font-semibold tracking-wide text-white rounded-md bg-gray-800 hover:bg-gray-700`}>
+    //                       MetaMask
+    //                 </button>
+    //                 <button onClick={()=>connect(connectorsByName["WalletConnect"])} 
+    //                    className={`p-5 py-2 my-1 mx-1 text-md font-semibold tracking-wide text-white rounded-md bg-gray-800 hover:bg-gray-700`}>
+    //                     WalletConnect
+    //                </button>
+    //                </>
+    //         }
+    //         {!!error && <span className='p-1 m-2'>{getErrorMessage(error)}</span>}
+    //         {/* <ConnectionStatus /> */}
+              
+
+    //  <div>
+    //           <div
+    //     style={{
+    //       display: 'grid',
+    //       gridGap: '1rem',
+    //       gridTemplateColumns: '1fr 1fr',
+    //       maxWidth: '20rem',
+    //       margin: 'auto'
+    //     }}
+    //   >
+    //     {Object.keys(connectorsByName).map(name => {
+    //       const currentConnector = connectorsByName[name]
+    //       const activating = currentConnector === activatingConnector
+    //       const connected = currentConnector === connector
+    //       const disabled = /*!triedEager ||*/ !!activatingConnector || connected || !!error
+
+    //       return (
+    //         <button className={`${disabled ? ' opacity-50 ' : ''} select-none border p-4 px-5 border-gray-700 rounded-md flex flex-row items-center justify-between`}
+    //           style={{
+    //             height: '3rem',
+    //             borderColor: activating ? 'orange' : connected ? 'green' : 'unset',
+    //             cursor: disabled ? 'unset' : 'pointer',
+    //             position: 'relative'
+    //           }}
+    //           disabled={disabled}
+    //           key={name}
+    //           onClick={() => {
+    //             setActivatingConnector(currentConnector)
+    //             activate(connectorsByName[name])
+    //           }}
+    //         >
+              
+    //             {activating && <Spinner color={'green'} style={{ height: '25px', margin: '0 8px 0 -10px' }} />}
+    //             {connected && <span role="img" aria-label="check">✅</span>}
+    //             <span className='w-full'>{name}</span>
+
+    //         </button>
+    //       )
+    //     })}
+    //   </div>
+
+    //           {!!(connector === connectorsByName[ConnectorNames.Network] && chainId) && (
+    //             <button className='select-none border p-4 px-5 m-5 border-gray-700 rounded-md flex flex-row items-center justify-between'
+    //               onClick={() => {(connector as any).changeChainId(chainId === 1 ? 4 : 1)}}
+    //             >
+    //               Switch Networks
+    //             </button>
+    //           )}
+
+    //           {!!error && <h4 style={{ marginTop: '1rem', marginBottom: '0' }}>{getErrorMessage(error)}</h4>}
+
+    //           </div>
+    //     </>
+    // )
+}

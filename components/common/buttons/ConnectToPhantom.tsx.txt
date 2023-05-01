@@ -1,0 +1,182 @@
+import { CopyToClipboardIcon } from "@/icons/";
+import copyToClipboard from "copy-to-clipboard";
+import { useEffect, useState } from "react";
+import { useConnection, useWallet as useWalletAdapter } from '@solana/wallet-adapter-react';
+import { getBalance } from "@/libs/solana";
+import React from "react";
+
+type Event = "connect" | "disconnect";
+
+
+// interface WalletWindow extends Window {
+//   solana?: Phantom;
+// }
+
+// declare const window: Phantom;
+
+declare global {
+  interface Window {
+    solana: any;
+  }
+}
+
+
+interface Phantom {
+  on: (event: Event, callback: (publicKey) => void) => void;
+  connect: ({onlyIfTrusted}:{onlyIfTrusted?:boolean}) => Promise<any>;
+  disconnect: () => Promise<void>;
+  solana: any,
+  isConnected: boolean
+}
+
+const ConnectToPhantom = () => {
+  const [phantom, setPhantom] = useState<Phantom | null>(null);
+  const [account, setAccount] = useState('');
+  const [connected, setConnected] = useState(false);
+
+  useEffect(() => {
+    if ("solana" in window) {
+      setPhantom(window["solana"]);
+    }
+  }, []);
+
+  useEffect(() => {
+    // Will either automatically connect to Phantom, or do nothing.
+    window?.solana?.connect({ onlyIfTrusted: true })
+        .then(({ publicKey }) => {
+            // Handle successful eager connection
+            setConnected(true);
+            setAccount(publicKey.toString());
+        })
+        .catch(() => {
+            // Handle connection failure as usual
+            console.log('error connecting with Phantom')
+        })
+  }, []);
+
+  useEffect(() => {
+    phantom?.on("connect", (publicKey: any) => {
+      console.log('Phantom connected', publicKey.toString())
+      setConnected(true);
+      setAccount(publicKey.toString());
+    });
+
+    phantom?.on("disconnect", () => {
+      console.log('Phantom disconnected')
+      setConnected(false);
+    });
+  }, [phantom]);
+
+  const connectHandler = () => {
+    phantom?.connect({ onlyIfTrusted: true }).then(({publicKey})=>{
+      setAccount(publicKey);
+    }).catch(e=>{
+      console.log(e)
+    });
+  };
+
+  const disconnectHandler = () => {
+    phantom?.disconnect().then(()=>{
+      setAccount('');
+    }).catch(e=>{
+      console.log(e)
+    })
+    
+  };
+
+  if (phantom) {
+    if (connected) {
+      return (
+        <button
+          onClick={disconnectHandler}
+          className="p-5 py-2 m-2 text-md font-semibold text-white rounded-md bg-green-600 hover:bg-green-500"
+        >
+          Disconnect from Phantom
+        </button>
+      );
+    }
+
+    return (
+      <button
+        onClick={connectHandler}
+        className="p-5 py-2 m-2 text-md font-semibold text-white rounded-md bg-gray-800 hover:bg-gray-700"
+      >
+        Connect to Phantom
+      </button>
+    );
+  }
+
+  return (
+    <a
+      href="https://phantom.app/"
+      target="_blank"
+      className="mx-2 p-2 px-5 border hover:border-gray-600 border-gray-400 rounded-md"
+    >
+      Get Phantom
+    </a>
+  );
+};
+
+export default ConnectToPhantom;
+
+const getCurrentSolanaProvider = () =>{
+  const provider = window?.solana;
+  //todo: add logic to get provider from wallet-adapter useWallet()
+  return provider;
+}
+
+export function Account({ trim=6 }:{ trim?: number }) {
+
+  const { publicKey } = useWalletAdapter();
+  const [account, setAccount] = React.useState('')
+
+  React.useEffect((): any => {
+    const provider = getCurrentSolanaProvider();
+    if (provider && provider.publicKey){
+      console.log('pppppppppppppppppppppppp', provider)
+      setAccount(provider.publicKey.toString());  
+    } 
+    else {
+    
+      if (publicKey) {
+        setAccount(publicKey.toString());
+      }
+    }
+  }, [account])
+
+  return <>
+          {account &&
+            <span className='flex items-center select-none hover:opacity-70 active:opacity-100 cursor-pointer' onClick={() => copyToClipboard(account)}>
+              {account ? `${account.substring(0, trim)}${ trim > 0 ? '...' : '' }${account.substring(account.length - trim)}` : ''}
+              <CopyToClipboardIcon className="ml-2" />
+            </span>
+          }
+        </>
+}
+
+export function Balance() {
+  const { publicKey } = useWalletAdapter();
+  const [balance, setBalance] = React.useState(0)
+
+  React.useEffect((): any => {
+    const provider = getCurrentSolanaProvider();
+    if (provider && provider.publicKey){
+      getBalance(provider.publicKey.toString())
+        .then((balance:any) => {
+          setBalance(balance);
+      });
+    } 
+    else {
+      if (publicKey) {
+        getBalance(publicKey.toString())
+          .then((balance:any) => {
+            setBalance(balance);
+        });
+      }
+    }
+  }, [publicKey])
+
+  return (
+    <span>{`${balance} SOL`}</span>
+  )
+}

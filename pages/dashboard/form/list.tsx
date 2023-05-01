@@ -107,15 +107,17 @@ export const AddressList: FC<Props> = ({ user }) => {
             addresses
               .filter((a) => isDefaultShipping(a))
               .map((address, i) => (
-                <Address
-                  address={address}
-                  editAddress={editAddress}
-                  setDefaultBilling={setDefaultBilling}
-                  setDefaultShipping={setDefaultShipping}
-                  deleteAddress={deleteAddress}
-                  isDefaultBilling={isDefaultBilling}
-                  isDefaultShipping={isDefaultShipping}
-                />
+                <div key={`address_${i}`}>
+                  <Address
+                    address={address}
+                    editAddress={editAddress}
+                    setDefaultBilling={setDefaultBilling}
+                    setDefaultShipping={setDefaultShipping}
+                    deleteAddress={deleteAddress}
+                    isDefaultBilling={isDefaultBilling}
+                    isDefaultShipping={isDefaultShipping}
+                  />
+                </div>
               ))}
           {addresses &&
             addresses

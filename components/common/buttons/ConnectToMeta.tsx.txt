@@ -1,0 +1,73 @@
+import { useEffect, useState } from "react";
+
+type Event = "connect" | "disconnect";
+
+interface MetaWallet {
+  on: (event: Event, callback: () => void) => void;
+  connect: () => Promise<void>;
+  disconnect: () => Promise<void>;
+}
+
+const ConnectToMeta = () => {
+  const [metawallet, setMetaWallet] = useState<MetaWallet | null>(null);
+
+  useEffect(() => {
+    if ("metawallet" in window) {
+      setMetaWallet(window["metawallet"]);
+    }
+  }, []);
+
+  const [connected, setConnected] = useState(false);
+
+  useEffect(() => {
+    metawallet?.on("connect", () => {
+      setConnected(true);
+    });
+
+    metawallet?.on("disconnect", () => {
+      setConnected(false);
+    });
+  }, [metawallet]);
+
+  const connectHandler = () => {
+    metawallet?.connect();
+  };
+
+  const disconnectHandler = () => {
+    metawallet?.disconnect();
+  };
+
+  if (metawallet) {
+    if (connected) {
+      return (
+        <button
+          onClick={disconnectHandler}
+          className="py-2 px-4 border border-purple-700 rounded-md text-sm font-medium text-purple-700 whitespace-nowrap hover:bg-purple-200"
+        >
+          Disconnect from Meta
+        </button>
+      );
+    }
+
+    return (
+      <button
+        onClick={connectHandler}
+        className="bg-purple-500 py-2 px-4 border border-transparent rounded-md text-sm font-medium text-white whitespace-nowrap hover:bg-opacity-75"
+      >
+        Connect to Meta
+      </button>
+    );
+  }
+
+  return (
+    <a
+      href="https://metawallet.network"
+      target="_blank"
+      className="bg-purple-500 px-4 py-2 border border-transparent rounded-md text-base font-medium text-white"
+    >
+      Get MetaWallet
+    </a>
+  );
+};
+
+export default ConnectToMeta;
