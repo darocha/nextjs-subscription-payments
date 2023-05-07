@@ -3,7 +3,7 @@ import camelcaseKeys from 'camelcase-keys';
 import { supabase } from '@/utils/supabase-client';
 import { getUser } from './user';
 import { AddressType } from '@/types';
-import { Database } from '@/types/types_db';
+import { Database } from '@/types/database.types';
 
 const convertToCamelcase = (values: any) =>
   camelcaseKeys(values, { deep: true });

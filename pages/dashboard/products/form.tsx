@@ -14,6 +14,7 @@ import { useAtom } from 'jotai';
 import { productAtom, productsAtom } from '@/atoms/product';
 import { tokens } from '@/theme';
 import StyledTextField from '@/components/form/styled-textfield';
+import { StyledSelect } from '@/components/form/styled-select';
 import { ProductType } from '@/types/nft';
 import { productApi } from '@/pages/api/products';
 
@@ -22,9 +23,21 @@ interface Props {
   user: any;
   onClose?: Function;
   onSubmit?: Function;
+  displayHeader: boolean;
+  title: string;
+  subtitle: string;
+  buttonLabel: string;
 }
 
-const Form: FC<Props> = ({ product, user, onSubmit }) => {
+const Form: FC<Props> = ({
+  product,
+  user,
+  onSubmit,
+  displayHeader = true,
+  title = 'Title',
+  subtitle = 'Subtitle',
+  buttonLabel = 'Submit'
+}) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const isMobile = useMediaQuery('(max-width:600px)');
@@ -52,7 +65,7 @@ const Form: FC<Props> = ({ product, user, onSubmit }) => {
   };
 
   const initialValues: ProductType = {
-    id: product?.id || null,
+    id: product?.id || undefined,
     live: product?.live || false,
     isDeleted: product?.isDeleted || false,
     number: product?.number || 0,
@@ -73,10 +86,18 @@ const Form: FC<Props> = ({ product, user, onSubmit }) => {
     available: product?.available || false,
     isAuction: product?.isAuction || false,
     isOnSale: product?.isOnSale || false,
-    lastPrice: product?.lastPrice || { usd: 0, amount: '', token: '' },
-    topBidPrice: product?.topBidPrice || { usd: 0, amount: '', token: '' },
-    price: product?.price || { usd: 0, amount: '', token: '' },
-    offerPrice: product?.offerPrice || { usd: 0, amount: '', token: '' }
+    lastPriceUSD: product?.lastPriceUSD || 0,
+    lastPriceAmount: product?.lastPriceToken || '',
+    lastPriceToken: product?.lastPriceToken || '',
+    topBidPriceUSD: product?.topBidPriceUSD || 0,
+    topBidPriceAmount: product?.topBidPriceToken || '',
+    topBidPriceToken: product?.topBidPriceToken || '',
+    priceUSD: product?.priceUSD || 0,
+    priceAmount: product?.priceAmount || '',
+    priceToken: product?.priceToken || '',
+    offerPriceUSD: product?.offerPriceUSD || 0,
+    offerPriceAmount: product?.offerPriceAmount || '',
+    offerPriceToken: product?.offerPriceToken || ''
   };
 
   return (
@@ -85,15 +106,17 @@ const Form: FC<Props> = ({ product, user, onSubmit }) => {
       style={{ background: colors.dashboard.window.background }}
     >
       <Box m="0px" className="sm:w-full md:w-[600px] mx-auto">
-        <Box className="dashboard-form-header">
-          <Header
-            title="Add Product"
-            subtitle="Add a New Product"
-            variant="h4"
-            subtitleVariant="h6"
-            fontWeight="normal"
-          />
-        </Box>
+        {displayHeader && (
+          <Box className="dashboard-form-header">
+            <Header
+              title={title}
+              subtitle={subtitle}
+              variant="h4"
+              subtitleVariant="h6"
+              fontWeight="normal"
+            />
+          </Box>
+        )}
 
         <Formik
           onSubmit={handleFormSubmit}
@@ -110,9 +133,9 @@ const Form: FC<Props> = ({ product, user, onSubmit }) => {
           }) => (
             <form onSubmit={handleSubmit}>
               <Box
+                className="grid-cols-4"
                 display="grid"
                 gap="30px"
-                gridTemplateColumns="repeat(4, minmax(0, 1fr))"
                 sx={{
                   '& > div': {
                     gridColumn: isMobile ? 'span 4' : undefined
@@ -142,16 +165,28 @@ const Form: FC<Props> = ({ product, user, onSubmit }) => {
                   onBlur={handleBlur}
                   onChange={handleChange}
                   value={values.description}
+                  minRows={10}
+                  multiline={true}
                   name="description"
                   error={!!touched.description && !!errors.description}
                   helperText={touched.description && errors.description}
                   sx={{ gridColumn: 'span 4' }}
                 />
+
+                <StyledSelect
+                  label="Product Type"
+                  name="productType"
+                  options={['Digital Product', 'Physical Product', 'NFT Asset']}
+                  value={values.title as string}
+                  onChange={handleChange}
+                  gridColumn={isMobile ? 'span 4' : 'span 2'}
+                />
+
                 <FormControlLabel
-                  sx={{ gridColumn: 'span 2' }}
+                  sx={{ gridColumn: 'span 4' }}
                   control={
                     <Checkbox
-                      checked={values.live}
+                      checked={!!values?.live}
                       value={values.live}
                       onChange={handleChange}
                       // disabled={initialValues.live}
@@ -164,7 +199,7 @@ const Form: FC<Props> = ({ product, user, onSubmit }) => {
               </Box>
               <Box display="flex" justifyContent="end" mt="20px">
                 <Button type="submit" color="secondary" variant="contained">
-                  Save Product
+                  {buttonLabel}
                 </Button>
               </Box>
             </form>
@@ -176,21 +211,21 @@ const Form: FC<Props> = ({ product, user, onSubmit }) => {
 };
 
 const validationSchema = yup.object().shape({
-  firstName: yup.string().required('First Name is required'),
-  lastName: yup.string().required('Last Name is required'),
+  // firstName: yup.string().required('First Name is required'),
+  // lastName: yup.string().required('Last Name is required'),
   //email: yup.string().email('invalid email').required('required'),
   // contact: yup
   //   .string()
   //   .matches(phoneRegExp, 'Phone number is not valid')
   //   .required('required'),
-  line1: yup.string().required('Product Line 1 is required'),
-  city: yup.string().required('City is required'),
-  state: yup.string().required('State is required'),
-  country: yup.string().required('Country is required'),
-  zipCode: yup
-    .string()
-    .matches(/^[0-9]{5}$/, 'Zip Code must be 5 digits')
-    .required('Zip Code is required')
+  // line1: yup.string().required('Product Line 1 is required'),
+  // city: yup.string().required('City is required'),
+  // state: yup.string().required('State is required'),
+  // country: yup.string().required('Country is required'),
+  // zipCode: yup
+  //   .string()
+  //   .matches(/^[0-9]{5}$/, 'Zip Code must be 5 digits')
+  //   .required('Zip Code is required')
 });
 
 export default Form;

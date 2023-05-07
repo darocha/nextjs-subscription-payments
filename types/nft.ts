@@ -1,3 +1,5 @@
+import { Database } from './database.types';
+
 export type NFTCollectionInfo = {
   collectionName: string;
   createdBy: string;
@@ -28,66 +30,9 @@ export type Price = {
   usd: number;
 };
 
-export type ProductType = {
-  id?: string | null;
-  live?: boolean;
-  isDeleted?: boolean;
-  number?: number;
-  title?: string;
-  owner?: string;
-  seller?: string;
-  url?: string;
-  images?: string[];
-  description?: string;
-  contractAddress?: string;
-  collectionName?: string;
-  collectionUrl?: string;
-  imageUrl?: string;
-  videoUrl?: string;
-  verified?: boolean;
-  endDate?: string;
-  startDate?: string;
-  available?: boolean;
-  isAuction?: boolean;
-  isOnSale?: boolean;
-  lastPrice?: Price;
-  topBidPrice?: Price;
-  price?: Price;
-  auctionPrice?: Price;
-  offerPrice?: Price;
-  views?: number;
-  likes?: number;
-  alt?: string;
-};
-
-// export type CardInfo = {
-//   id: string;
-//   number: number;
-//   title: string;
-//   owner: string;
-//   seller?: string;
-//   url: string;
-//   images?: string[];
-//   description?: string;
-//   contractAddress?: string;
-//   collectionName?: string;
-//   collectionUrl?: string;
-//   imageUrl?: string;
-//   videoUrl?: string;
-//   verified?: boolean;
-//   startDate?: string;
-//   endDate?: string;
-//   available?: boolean;
-//   isAuction?: boolean;
-//   isOnSale?: boolean;
-//   lastPrice?: Price;
-//   topBidPrice?: Price;
-//   price?: Price;
-//   auctionPrice?: Price;
-//   offerPrice?: Price;
-//   views: number;
-//   likes: number;
-// };
+export type ProductType =
+  | Database['public']['Tables']['app_products']['Insert']
+  | Database['public']['Tables']['app_products']['Update'];
 
 export type GalleryCardInfo = {
   description?: string;

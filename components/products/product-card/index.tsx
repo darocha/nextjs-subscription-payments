@@ -9,14 +9,9 @@ import { FC } from 'react';
 export type ProductCardProps = {
   product: ProductType;
   onBuyClick?: Function;
-  key: number;
 };
 
-export const ProductCard: FC<ProductCardProps> = ({
-  product,
-  onBuyClick,
-  key
-}) => {
+export const ProductCard: FC<ProductCardProps> = ({ product, onBuyClick }) => {
   const defaultMarketplaceImageUrl = '/images/nfts/1.png';
 
   const {
@@ -38,10 +33,7 @@ export const ProductCard: FC<ProductCardProps> = ({
   } = product;
 
   return (
-    <div
-      key={key}
-      className="card relative group hover:shadow-lg bg-white rounded-lg overflow-hidden"
-    >
+    <div className="card relative group hover:shadow-lg bg-white rounded-lg overflow-hidden">
       <div className="py-0 px-3 flex justify-between items-center">
         <span className="w-full inline-flex text-sm">{title}</span>
         <span className="inline-flex items-center justify-items-end text-gray-500 font-medium text-sm">

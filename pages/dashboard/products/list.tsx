@@ -1,8 +1,8 @@
 import Header from '@/components/Header';
 import { ProductType } from '@/types/nft';
 import { Box, IconButton, useTheme } from '@mui/material';
-import { FC } from 'react';
-import AddIcon from '@mui/icons-material/Add';
+import { FC, useState } from 'react';
+// import AddIcon from '@mui/icons-material/Add';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAtom } from 'jotai';
@@ -13,17 +13,20 @@ import ProductActions from './actions';
 import { productApi } from '@/pages/api/products';
 import { tokens } from '@/theme';
 import Grid from '@/components/products/grid';
+import { ButtonGroup } from '@/components/products/button-group';
 
-type Props = {
+type ProductListProps = {
   user: any;
+  productsArr: ProductType[];
 };
 
-export const ProductsList: FC<Props> = ({ user }) => {
+export const ProductsList: FC<ProductListProps> = ({ user, productsArr }) => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
   const [open, setModalOpen] = useAtom(productModalAtom);
   const [products, setProducts] = useAtom(productsAtom);
   const [product, setProduct] = useAtom(productAtom);
+  const [viewMode, setViewMode] = useState<number>(1);
 
   const openModal = () => {
     setModalOpen(true);
@@ -57,10 +60,10 @@ export const ProductsList: FC<Props> = ({ user }) => {
   return (
     <>
       <Box
-        className="dashboard-box medium my-10"
+        className="dashboard-box large my-10"
         sx={{ background: colors.dashboard.window.background }}
       >
-        <Box className="dashboard-box-header">
+        <Box className="dashboard-box-header justify-between items-center flex">
           <Header
             title="Your Products"
             subtitle="Manage your physical and digital products"
@@ -68,15 +71,23 @@ export const ProductsList: FC<Props> = ({ user }) => {
             subtitleVariant="h6"
             fontWeight="normal"
           />
-
-          <div className="dashboard-circle-button m-5 absolute">
-            <IconButton onClick={openModal} type="button" sx={{ p: 1 }}>
-              <AddIcon />
-            </IconButton>
+          <div className="flex   items-center justify-center w-full">
+            <ButtonGroup selected={viewMode} onClick={setViewMode} />
+          </div>
+          <div className="w-full flex justify-end">
+            <Link href="/dashboard/products/add">
+              <button
+                type="button"
+                className={`inline-flex bg-slate-600 items-center  px-4 py-2 text-sm font-medium text-gray-400 rounded-lg hover:bg-gray-900 hover:text-white focus:z-10 focus:ring-2 focus:ring-gray-500 focus:bg-gray-900 focus:text-white  dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:bg-gray-700`}
+              >
+                Add New Product
+              </button>
+            </Link>
           </div>
         </Box>
         <Box className="dashboard-box-body">
-          {products &&
+          {viewMode === 1 &&
+            products &&
             products.map((product, i) => {
               return (
                 <div key={`product_${i}`}>
@@ -92,23 +103,25 @@ export const ProductsList: FC<Props> = ({ user }) => {
               );
             })}
 
+          {viewMode === 2 && <Grid items={products || []} />}
+
           {!products ||
             (products.length === 0 && (
               <div className="flex text-center p-50 py-[50px] w-full justify-center">
-                <div>There are no productes here</div>
+                <div>There are no products here</div>
               </div>
             ))}
         </Box>
       </Box>
-      <Grid items={products || []} />
-      <AppModal onClose={onClose} open={open}>
+
+      {/* <AppModal onClose={onClose} open={open}>
         <ProductForm
           onSubmit={onSubmit}
           onClose={onClose}
           product={product}
           user={user}
         />
-      </AppModal>
+      </AppModal> */}
     </>
   );
 };
@@ -152,10 +165,10 @@ const Product: FC<ProductProps> = ({
       <div className="flex justify-between items-center w-full pl-2">
         <div>
           <div className="px-2 mb-5 gap-2 opacity-30 flex">
-            <span className="rounded-md bg-zinc-300 text-gray-800 px-3 py-0">
+            <span className="rounded-md bg-zinc-300 font-semibold text-gray-800 px-3 py-0">
               digital
             </span>
-            <span className="rounded-md bg-zinc-300 text-gray-800 px-3 py-0">
+            <span className="rounded-md bg-zinc-300 font-semibold text-gray-800 px-3 py-0">
               nft
             </span>
           </div>

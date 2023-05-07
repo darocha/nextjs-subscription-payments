@@ -20,12 +20,12 @@ export default function Grid({
   const [columns, setColumns] = useState('grid-cols-5');
   const gridElementRef = useRef<any>();
 
-  useEffect(function mount() {
-    function onResize() {
+  useEffect(() => {
+    const onResize = () => {
       const width = gridElementRef?.current?.clientWidth || window.innerWidth;
       const columns = `grid-cols-${Math.floor(width / cardWidth)}`;
       setColumns(columns);
-    }
+    };
     onResize();
     const throttleResize = throttle(onResize, 500);
     window.addEventListener('resize', throttleResize);
@@ -41,7 +41,9 @@ export default function Grid({
       className={`grid ${columns || 'grid-cols-4'} gap-4 p-4 w-full mx-auto`}
     >
       {items.map((product, i) => (
-        <ProductCard key={i} product={product} onBuyClick={onBuyClick} />
+        <div key={`product_card_${i}`}>
+          <ProductCard product={product} onBuyClick={onBuyClick} />
+        </div>
       ))}
     </div>
   );

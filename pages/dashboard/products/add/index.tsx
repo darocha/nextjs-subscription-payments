@@ -1,30 +1,37 @@
 import DashboardLayout from '@/components/DashboardLayout';
 import { ReactNode, useEffect } from 'react';
 import { useAtom } from 'jotai';
-import { productsAtom } from '@/atoms/product';
+import { productAtom } from '@/atoms/product';
 import { productApi } from '@/pages/api/products';
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { GetServerSidePropsContext } from 'next/types';
-import { LayoutComponent } from '../../../types/next';
-import { ProductsList } from './list';
+import { LayoutComponent } from '../../../../types/next';
+import { EditProductForm } from '../edit/edit';
 import { ProductType } from '@/types/nft';
 
 interface Props extends LayoutComponent {
-  productsArr: ProductType[];
+  product: ProductType;
   user: any;
 }
 
-const ProductsPage: LayoutComponent<Props> = ({ productsArr, user }) => {
-  const [, setProducts] = useAtom(productsAtom);
+const AddEditProductPage: LayoutComponent<Props> = ({ product, user }) => {
+  const [, setProduct] = useAtom(productAtom);
 
   useEffect(() => {
-    setProducts(productsArr);
+    setProduct(product);
   }, []);
 
-  return <ProductsList user={user} productsArr={productsArr} />;
+  return (
+    <EditProductForm
+      user={user}
+      product={product}
+      title="Add Product"
+      buttonLabel="Save"
+    />
+  );
 };
 
-ProductsPage.getLayout = (page: ReactNode) => (
+AddEditProductPage.getLayout = (page: ReactNode) => (
   <DashboardLayout>{page}</DashboardLayout>
 );
 
@@ -43,9 +50,13 @@ export const getServerSideProps = async (ctx: GetServerSidePropsContext) => {
     };
   }
   const user = session?.user;
-  const productsArr = await productApi.getMockProducts(user.id);
+  const productId = ctx.params?.productId;
 
-  return { props: { productsArr, user } };
+  const product = productId
+    ? await productApi.getProduct(productId as string, user.id)
+    : null;
+
+  return { props: { product, user } };
 };
 
-export default ProductsPage;
+export default AddEditProductPage;
