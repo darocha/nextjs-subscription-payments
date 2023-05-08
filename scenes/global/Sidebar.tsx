@@ -18,6 +18,7 @@ import TimelineOutlinedIcon from '@mui/icons-material/TimelineOutlined';
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
 import MapOutlinedIcon from '@mui/icons-material/MapOutlined';
 import SellIcon from '@mui/icons-material/Sell';
+import CategoryIcon from '@mui/icons-material/Category';
 import { sidebarClasses, menuClasses } from './utility-classes';
 import Logo from '@/components/icons/Logo';
 
@@ -48,12 +49,13 @@ const MySidebar = () => {
 
   return (
     <>
-      <div style={{ width: '300px' }} />
+      <div style={{ width: '300px', maxWidth: '300px' }} />
       <Sidebar
         defaultCollapsed={false}
         width={'300px'}
         backgroundColor={'#1f2a41'}
         rootStyles={{
+          width: '300px',
           border: '0 !important',
           zIndex: 1200,
           position: 'fixed',
@@ -195,6 +197,13 @@ const MySidebar = () => {
               title="Products"
               to="/dashboard/products"
               icon={<SellIcon />}
+              selected={selected}
+              setSelected={setSelected}
+            />
+            <Item
+              title="Categories"
+              to="/dashboard/categories"
+              icon={<CategoryIcon />}
               selected={selected}
               setSelected={setSelected}
             />
